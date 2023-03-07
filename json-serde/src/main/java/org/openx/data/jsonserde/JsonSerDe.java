@@ -13,7 +13,6 @@
 
 package org.openx.data.jsonserde;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.hadoop.hive.common.type.Timestamp;
 import org.apache.hadoop.hive.serde2.AbstractSerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.objectinspector.*;
@@ -338,7 +338,8 @@ public class JsonSerDe extends AbstractSerDe {
                         result = ((StringObjectInspector)poi).getPrimitiveJavaObject(obj);
                         break;
                     case TIMESTAMP:
-                        result = ParsePrimitiveUtils.serializeAsUTC(((TimestampObjectInspector)poi).getPrimitiveJavaObject(obj));
+                        Timestamp primitiveJavaObject = ((TimestampObjectInspector) poi).getPrimitiveJavaObject(obj);
+                        result = ParsePrimitiveUtils.serializeAsUTC(primitiveJavaObject.toSqlTimestamp());
                         break;
                     case UNKNOWN:
                         throw new RuntimeException("Unknown primitive");

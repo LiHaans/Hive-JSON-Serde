@@ -1,6 +1,6 @@
 package org.openx.data.jsonserde.objectinspector.primitive;
 
-import org.apache.hadoop.hive.serde2.io.DateWritable;
+import org.apache.hadoop.hive.serde2.io.DateWritableV2;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.AbstractPrimitiveJavaObjectInspector;
 import org.apache.hadoop.hive.serde2.objectinspector.primitive.SettableDateObjectInspector;
 
@@ -20,40 +20,55 @@ public class JavaStringDateObjectInspector  extends AbstractPrimitiveJavaObjectI
     }
 
 
+    @Override
+    public Object set(Object o, Date date) {
+        return date.toString();
+    }
 
     @Override
-    public Object set(Object o, java.sql.Date d) {
+    public Object set(Object o, org.apache.hadoop.hive.common.type.Date d) {
         return d.toString();
     }
 
     @Override
-    public Object set(Object o, DateWritable tw) {
+    public Object set(Object o, DateWritableV2 tw) {
         return create( tw.get());
     }
-
 
     @Override
     public Object create(Date d) {
         return d.toString();
     }
 
+
     @Override
-    public DateWritable getPrimitiveWritableObject(Object o) {
+    public Object create(org.apache.hadoop.hive.common.type.Date d) {
+        return d.toString();
+    }
+
+    @Override
+    public DateWritableV2 getPrimitiveWritableObject(Object o) {
         if(o == null) return null;
 
         if(o instanceof String) {
-            return new DateWritable(parse((String)o));
+            Date parse = parse((String) o);
+            org.apache.hadoop.hive.common.type.Date date = new org.apache.hadoop.hive.common.type.Date();
+            date.setTimeInMillis(parse.getTime());
+            return new DateWritableV2(date);
         } else {
-            return new DateWritable((Date) o);
+            return new DateWritableV2((org.apache.hadoop.hive.common.type.Date) o);
         }
     }
 
     @Override
-    public Date getPrimitiveJavaObject(Object o) {
+    public org.apache.hadoop.hive.common.type.Date getPrimitiveJavaObject(Object o) {
         if(o instanceof String) {
-           return parse((String)o);
+            Date parse = parse((String) o);
+            org.apache.hadoop.hive.common.type.Date date = new org.apache.hadoop.hive.common.type.Date();
+            date.setTimeInMillis(parse.getTime());
+           return date;
         } else {
-            if (o instanceof Date) return (Date) o;
+            if (o instanceof Date) return (org.apache.hadoop.hive.common.type.Date) o;
         }
         return null;
     }
