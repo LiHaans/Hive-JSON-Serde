@@ -82,6 +82,9 @@ public final class ParsePrimitiveUtils {
     public static String serializeAsUTC(Timestamp ts) {
         return UTC_FORMAT.format(ts.getTime() );
     }
+    public static String serializeAsNoUTC(Timestamp ts) {
+        return NON_UTC_FORMAT.format(ts.getTime() );
+    }
 
     public static Timestamp parseTimestamp(String s) {
         final String sampleUnixTimestampInMs = "1454612111000";

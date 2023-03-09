@@ -24,6 +24,7 @@ import org.apache.hadoop.hive.common.type.Timestamp;
 import org.apache.hadoop.hive.serde2.AbstractSerDe;
 import org.apache.hadoop.hive.serde2.SerDeException;
 import org.apache.hadoop.hive.serde2.objectinspector.*;
+import org.apache.hadoop.hive.serde2.objectinspector.primitive.*;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoUtils;
@@ -33,15 +34,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.hive.serde2.SerDeStats;
 import org.apache.hadoop.hive.serde2.objectinspector.ObjectInspector.Category;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.BooleanObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.ByteObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.DoubleObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.FloatObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.IntObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.LongObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.ShortObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.StringObjectInspector;
-import org.apache.hadoop.hive.serde2.objectinspector.primitive.TimestampObjectInspector;
 
 import org.apache.hadoop.hive.serde2.typeinfo.StructTypeInfo;
 import org.apache.hadoop.io.Text;
@@ -52,11 +44,8 @@ import org.openx.data.jsonserde.json.JSONOptions;
 import org.openx.data.jsonserde.objectinspector.JsonObjectInspectorFactory;
 import org.openx.data.jsonserde.objectinspector.JsonStructOIOptions;
 
-import javax.print.attribute.standard.DateTimeAtCompleted;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hive.serde.serdeConstants;
-import org.apache.hadoop.hive.serde2.typeinfo.PrimitiveTypeInfo;
-import org.openx.data.jsonserde.objectinspector.primitive.JavaStringTimestampObjectInspector;
 import org.openx.data.jsonserde.objectinspector.primitive.ParsePrimitiveUtils;
 
 /**
@@ -101,12 +90,12 @@ public class JsonSerDe extends AbstractSerDe {
      */
     @Override
     public void initialize(Configuration conf, Properties tbl) throws SerDeException {
-        LOG.debug("Initializing SerDe");
+        LOG.info("Initializing SerDe");
         // Get column names and sort order
         String columnNameProperty = tbl.getProperty(serdeConstants.LIST_COLUMNS);
         String columnTypeProperty = tbl.getProperty(serdeConstants.LIST_COLUMN_TYPES);
-        
-        LOG.debug("columns " + columnNameProperty + " types " + columnTypeProperty);
+
+        LOG.info("columns " + columnNameProperty + " types " + columnTypeProperty);
 
         // all table column names
         if (columnNameProperty.length() == 0) {
@@ -128,7 +117,7 @@ public class JsonSerDe extends AbstractSerDe {
         // Create row related objects
         rowTypeInfo = (StructTypeInfo) TypeInfoFactory
                 .getStructTypeInfo(columnNames, columnTypes);
-        
+
         // build options
         boolean isCaseInsensitive = Boolean.parseBoolean(tbl.getProperty(PROP_CASE_INSENSITIVE, "true"));
         options = new JsonStructOIOptions(getMappings(tbl, isCaseInsensitive));
@@ -138,7 +127,7 @@ public class JsonSerDe extends AbstractSerDe {
         String columnSortOrder = tbl.getProperty(serdeConstants.SERIALIZATION_SORT_ORDER);
         columnSortOrderIsDesc = new boolean[columnNames.size()];
         for (int i = 0; i < columnSortOrderIsDesc.length; i++) {
-            columnSortOrderIsDesc[i] = columnSortOrder != null && 
+            columnSortOrderIsDesc[i] = columnSortOrder != null &&
                     columnSortOrder.charAt(i) == '-';
         }
 
@@ -337,13 +326,23 @@ public class JsonSerDe extends AbstractSerDe {
                     case STRING:
                         result = ((StringObjectInspector)poi).getPrimitiveJavaObject(obj);
                         break;
+                    case VARCHAR:
+                        result = ((HiveVarcharObjectInspector)poi).getPrimitiveJavaObject(obj);
+                        break;
+                    case CHAR:
+                        result = ((HiveCharObjectInspector)poi).getPrimitiveJavaObject(obj);
+                        break;
                     case TIMESTAMP:
                         Timestamp primitiveJavaObject = ((TimestampObjectInspector) poi).getPrimitiveJavaObject(obj);
-                        result = ParsePrimitiveUtils.serializeAsUTC(primitiveJavaObject.toSqlTimestamp());
+                        result = ParsePrimitiveUtils.serializeAsNoUTC(primitiveJavaObject.toSqlTimestamp());
+                        break;
+                    case DATE:
+                        result = ((DateObjectInspector)poi).getPrimitiveJavaObject(obj);
                         break;
                     case UNKNOWN:
                         throw new RuntimeException("Unknown primitive");
                     default:
+                        result = ((StringObjectInspector)poi).getPrimitiveJavaObject(obj);
                         break;
                 }
                 break;

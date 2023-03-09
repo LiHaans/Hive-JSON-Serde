@@ -77,7 +77,7 @@
                 <serde.shim>json-serde-cdh5-shim</serde.shim>
                 <cdh.version>${cdh5.version}</cdh.version>
                 <cdh.hive.version>${cdh5.hive.version}</cdh.hive.version>
-                <cdh.hadoop.version>${cdh5.hadoop.version}</cdh.hadoop.version>
+                <cdh.hadoop.version>3.1.4</cdh.hadoop.version>
                 <cdh.shim>cdh5</cdh.shim>
             </properties>
         </profile>

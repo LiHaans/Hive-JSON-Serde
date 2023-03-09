@@ -197,6 +197,8 @@ public final class JsonObjectInspectorFactory {
 
     static {
         primitiveOICache.put(PrimitiveCategory.STRING, new JavaStringJsonObjectInspector());
+        primitiveOICache.put(PrimitiveCategory.VARCHAR, new JsonStringVarcharInspector());
+        primitiveOICache.put(PrimitiveCategory.CHAR, new JsonStringCharInspector());
         primitiveOICache.put(PrimitiveCategory.BYTE, new JavaStringByteObjectInspector());
         primitiveOICache.put(PrimitiveCategory.SHORT, new JavaStringShortObjectInspector());
         primitiveOICache.put(PrimitiveCategory.INT, new JavaStringIntObjectInspector());
@@ -205,6 +207,7 @@ public final class JsonObjectInspectorFactory {
         primitiveOICache.put(PrimitiveCategory.DOUBLE, new JavaStringDoubleObjectInspector());
         primitiveOICache.put(PrimitiveCategory.TIMESTAMP, new JavaStringTimestampObjectInspector());
         primitiveOICache.put(PrimitiveCategory.BOOLEAN, new JavaStringBooleanObjectInspector());
+        primitiveOICache.put(PrimitiveCategory.DATE, new JavaStringDateObjectInspector());
         // add the OIs that were introduced in different versions of hive
         TypeEntryShim.addObjectInspectors(primitiveOICache);
     }
