@@ -208,6 +208,11 @@ public final class JsonObjectInspectorFactory {
         primitiveOICache.put(PrimitiveCategory.TIMESTAMP, new JavaStringTimestampObjectInspector());
         primitiveOICache.put(PrimitiveCategory.BOOLEAN, new JavaStringBooleanObjectInspector());
         primitiveOICache.put(PrimitiveCategory.DATE, new JavaStringDateObjectInspector());
+
+        primitiveOICache.put(PrimitiveCategory.BINARY, new JavaStringBinaryObjectInspector());
+        //primitiveOICache.put(PrimitiveCategory.TIMESTAMPLOCALTZ, new JavaStringTimestampLocalTzObjectInspector());
+        primitiveOICache.put(PrimitiveCategory.DECIMAL, new JavaStringDecimalObjectInspector());
+
         // add the OIs that were introduced in different versions of hive
         TypeEntryShim.addObjectInspectors(primitiveOICache);
     }

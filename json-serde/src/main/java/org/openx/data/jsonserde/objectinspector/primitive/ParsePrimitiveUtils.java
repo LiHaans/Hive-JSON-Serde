@@ -5,10 +5,16 @@
  */
 package org.openx.data.jsonserde.objectinspector.primitive;
 
+import com.google.common.primitives.Bytes;
+import org.apache.commons.lang.StringUtils;
+
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -144,4 +150,8 @@ public final class ParsePrimitiveUtils {
     }
 
 
+    public static ZonedDateTime parseZonedDateTime(String s) {
+       return null;
+
+    }
 }

@@ -36,6 +36,9 @@ public class TypeEntryShim {
     public static PrimitiveTypeInfo dateType = TypeInfoFactory.dateTypeInfo;
     public static PrimitiveTypeInfo varcharType = TypeInfoFactory.varcharTypeInfo;
     public static PrimitiveTypeInfo charType = TypeInfoFactory.charTypeInfo;
+    public static PrimitiveTypeInfo binaryType = TypeInfoFactory.binaryTypeInfo;
+    public static PrimitiveTypeInfo timestampTzType = TypeInfoFactory.timestampLocalTZTypeInfo;
+    public static PrimitiveTypeInfo decimalType = TypeInfoFactory.decimalTypeInfo;
 
     public static void addObjectInspectors(Map<PrimitiveObjectInspector.PrimitiveCategory, AbstractPrimitiveJavaObjectInspector> primitiveOICache) {
         primitiveOICache.put(dateType.getPrimitiveCategory(), new JavaStringDateObjectInspector());

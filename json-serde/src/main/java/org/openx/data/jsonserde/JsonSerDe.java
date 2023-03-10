@@ -339,6 +339,12 @@ public class JsonSerDe extends AbstractSerDe {
                     case DATE:
                         result = ((DateObjectInspector)poi).getPrimitiveJavaObject(obj);
                         break;
+                    case DECIMAL:
+                        result = ((HiveDecimalObjectInspector)poi).getPrimitiveJavaObject(obj);
+                        break;
+                    case BINARY:
+                        result = ((BinaryObjectInspector)poi).getPrimitiveJavaObject(obj);
+                        break;
                     case UNKNOWN:
                         throw new RuntimeException("Unknown primitive");
                     default:

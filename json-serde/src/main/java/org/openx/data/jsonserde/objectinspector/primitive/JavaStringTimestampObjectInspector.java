@@ -72,6 +72,12 @@ public class JavaStringTimestampObjectInspector extends AbstractPrimitiveJavaObj
         //return ParsePrimitiveUtils.serializeAsUTC(ts);
         return ParsePrimitiveUtils.serializeAsNoUTC(ts);
     }
+
+    private String formatTimeStampTz(Timestamp ts) {
+        //return ParsePrimitiveUtils.serializeAsUTC(ts);
+        return ParsePrimitiveUtils.serializeAsUTC(ts);
+    }
+
     private String formatTimeStamp(TimestampWritable tsw) {
         return formatTimeStamp(tsw.getTimestamp());
     }
